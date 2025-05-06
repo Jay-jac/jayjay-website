@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JayJay Car Dealers - Buy & Sell Vehicles</title>
+<style>
+  /* Reset */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background-color: #005f73;
+    color: #fff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 6px rgba(0,95,115,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+  }
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1.4rem;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+  nav a:hover, nav a:focus {
+    color: #94d2bd;
+    outline: none;
+  }
+  main {
+    flex-grow: 1;
+    max-width: 1200px;
+    margin: 2rem auto 3rem;
+    width: 90%;
+  }
+  .search-bar {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .search-bar input[type="text"] {
+    flex-grow: 1;
+    padding: 0.6rem 1rem;
+    border: 2px solid #94d2bd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  .search-bar button {
+    background-color: #0a9396;
+    border: none;
+    color: white;
+    padding: 0 1.2rem;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .search-bar button:hover, .search-bar button:focus {
+    background-color: #005f73;
+    outline: none;
+  }
+  h2 {
+    color: #005f73;
+    margin-bottom: 1rem;
+  }
+  .vehicle-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 1.2rem;
+  }
+  .vehicle-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .vehicle-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+  }
+  .vehicle-info {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .vehicle-info h3 {
+    margin: 0 0 0.4rem 0;
+    color: #0a9396;
+    font-size: 1.1rem;
+  }
+  .vehicle-info p {
+    margin: 0.2rem 0;
+    flex-grow: 1;
+  }
+  .vehicle-info .price {
+    font-weight: 700;
+    color: #005f73;
+    font-size: 1.1rem;
+    margin-top: auto;
+  }
+  .sell-form-container {
+    margin-top: 3rem;
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .sell-form-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .sell-form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: #005f73;
+  }
+  .sell-form input[type="text"],
+  .sell-form input[type="number"],
+  .sell-form input[type="url"],
+  .sell-form textarea,
+  .sell-form select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: 1.8px solid #94d2bd;
+    font-size: 1rem;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .sell-form textarea {
+    min-height: 80px;
+  }
+  .sell-form button {
+    background-color: #005f73;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    color: white;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 0 auto;
+    font-size: 1.1rem;
+  }
+  .sell-form button:hover,
+  .sell-form button:focus {
+    background-color: #0a9396;
+    outline: none;
+  }
+  .message {
+    text-align: center;
+    margin-top: 0.8rem;
+    font-weight: 600;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem 1rem;
+    background: #005f73;
+    color: white;
+    font-size: 0.9rem;
+    margin-top: auto;
+  }
+
+  @media (max-width: 600px) {
+    .vehicle-list {
+      grid-template-columns: 1fr;
+    }
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    nav a {
+      margin-left: 0;
+      margin-right: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>JayJay Car Dealers</h1>
+  <nav>
+    <a href="#buy">Buy</a>
+    <a href="#sell">Sell</a>
+  </nav>
+</header>
+
+<main>
+
+  <section id="buy">
+    <h2>Buy Vehicles</h2>
+
+    <!-- Search bar -->
+    <div class="search-bar" role="search">
+      <input type="text" id="searchInput" aria-label="Search vehicles by brand or model" placeholder="Search vehicles by brand or model..." />
+      <button id="searchBtn" aria-label="Search vehicles">Search</button>
+      <button id="clearBtn" aria-label="Clear search">Clear</button>
+    </div>
+
+    <!-- Vehicles list -->
+    <div class="vehicle-list" id="vehicleList" aria-live="polite">
+      <!-- Vehicle cards injected by JS -->
+    </div>
+  </section>
+
+  <section id="sell" class="sell-form-container" aria-labelledby="sellHeading">
+    <h2 id="sellHeading">Sell Your Vehicle</h2>
+    <form id="sellForm" class="sell-form" novalidate>
+      <label for="brandInput">Brand *</label>
+      <input type="text" id="brandInput" name="brand" required placeholder="e.g. Toyota" />
+
+      <label for="modelInput">Model *</label>
+      <input type="text" id="modelInput" name="model" required placeholder="e.g. Camry" />
+
+      <label for="yearInput">Year *</label>
+      <input type="number" id="yearInput" name="year" required min="1950" max="2024" placeholder="e.g. 2020" />
+
+      <label for="priceInput">Price (USD) *</label>
+      <input type="number" id="priceInput" name="price" required min="0" step="100" placeholder="e.g. 15000" />
+
+      <label for="imageInput">Image URL *</label>
+      <input type="url" id="imageInput" name="imageUrl" required placeholder="https://example.com/car.jpg" />
+
+      <label for="descInput">Description</label>
+      <textarea id="descInput" name="description" placeholder="Additional information about your vehicle"></textarea>
+
+      <button type="submit">Submit Vehicle</button>
+    </form>
+    <div class="message" role="alert" aria-live="assertive" id="formMessage"></div>
+  </section>
+
+</main>
+
+<footer>
+  &copy; 2025 JayJay Car Dealers. All rights reserved.
+</footer>
+
+<script>
+  const vehicleListEl = document.getElementById('vehicleList');
+  const sellForm = document.getElementById('sellForm');
+  const formMessage = document.getElementById('formMessage');
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  // Initial sample vehicles for sale
+  let vehicles = [
+    {
+      brand: 'Toyota',
+      model: 'Camry',
+      year: 2019,
+      price: 18500,
+      imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      description: 'Reliable midsize sedan with excellent fuel economy.'
+    },
+    {
+      brand: 'Ford',
+      model: 'F-150',
+      year: 2018,
+      price: 27000,
+      imageUrl: 'https://images.pexels.com/photos/1915336/pexels-photo-1915336.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      description: 'Powerful pickup truck with great towing capacity.'
+    },
+    {
+      brand: 'Honda',
+      model: 'Civic',
+      year: 2020,
+      price: 17200,
+      imageUrl: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      description: 'Compact car with sporty design and efficient engine.'
+    }
+  ];
+
+  // Function to render vehicles in vehicleListEl
+  function renderVehicles(list) {
+    vehicleListEl.innerHTML = '';
+    if (list.length === 0) {
+      vehicleListEl.innerHTML = '<p>No vehicles found matching your criteria.</p>';
+      return;
+    }
+    list.forEach(vehicle => {
+      const card = document.createElement('div');
+      card.className = 'vehicle-card';
+
+      const img = document.createElement('img');
+      img.src = vehicle.imageUrl;
+      img.alt = `${vehicle.brand} ${vehicle.model}`;
+      card.appendChild(img);
+
+      const info = document.createElement('div');
+      info.className = 'vehicle-info';
+
+      const title = document.createElement('h3');
+      title.textContent = `${vehicle.brand} ${vehicle.model} (${vehicle.year})`;
+      info.appendChild(title);
+
+      const desc = document.createElement('p');
+      desc.textContent = vehicle.description || '';
+      info.appendChild(desc);
+
+      const price = document.createElement('p');
+      price.className = 'price';
+      price.textContent = `$${vehicle.price.toLocaleString()}`;
+      info.appendChild(price);
+
+      card.appendChild(info);
+      vehicleListEl.appendChild(card);
+    });
+  }
+
+  // Initial render
+  renderVehicles(vehicles);
+
+  // Search function to filter vehicles by brand or model
+  function searchVehicles() {
+    const query = searchInput.value.trim().toLowerCase();
+    if (!query) {
+      renderVehicles(vehicles);
+      return;
+    }
+    const filtered = vehicles.filter(v =>
+      v.brand.toLowerCase().includes(query) ||
+      v.model.toLowerCase().includes(query)
+    );
+    renderVehicles(filtered);
+  }
+
+  searchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchVehicles();
+  });
+
+  clearBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchInput.value = '';
+    renderVehicles(vehicles);
+  });
+
+  // Form submission handler
+  sellForm.addEventListener('submit', e => {
+    e.preventDefault();
+    formMessage.textContent = '';
+    formMessage.style.color = 'red';
+
+    // Simple validation
+    const brand = sellForm.brand.value.trim();
+    const model = sellForm.model.value.trim();
+    const year = parseInt(sellForm.year.value);
+    const price = parseFloat(sellForm.price.value);
+    const imageUrl = sellForm.imageUrl.value.trim();
+    const description = sellForm.description.value.trim();
+
+    if (!brand || !model || isNaN(year) || year < 1950 || year > new Date().getFullYear()) {
+      formMessage.textContent = 'Please enter a valid year between 1950 and current year.';
+      return;
+    }
+    if (isNaN(price) || price < 0) {
+      formMessage.textContent = 'Please enter a valid positive price.';
+      return;
+    }
+    if (!imageUrl || !/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(imageUrl)) {
+      formMessage.textContent = 'Please enter a valid image URL ending with .jpg, .jpeg, .png, .gif, or .webp';
+      return;
+    }
+
+    // Add new vehicle to the array
+    vehicles.push({
+      brand,
+      model,
+      year,
+      price,
+      imageUrl,
+      description
+    });
+
+    // Re-render list including new vehicle
+    renderVehicles(vehicles);
+
+    // Show success message
+    formMessage.style.color = 'green';
+    formMessage.textContent = 'Vehicle submitted successfully!';
+
+    // Reset form
+    sellForm.reset();
+  });
+</script>
+
+</body>
+</html>
+
+```
+
